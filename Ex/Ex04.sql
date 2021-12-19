@@ -66,8 +66,8 @@ from employees;
 select first_name,
        department_id,
        case when department_id between 10 and 50 then 'A-TEAM'
-            when department_id >=60 and department_id <= 100 then 'A-TEAM'
-            when department_id >=110 and department_id <= 150 then 'A-TEAM'
+            when department_id >=60 and department_id <= 100 then 'B-TEAM'
+            when department_id >=110 and department_id <= 150 then 'C-TEAM'
             else '팀없음'
        end as team
 from employees;       
