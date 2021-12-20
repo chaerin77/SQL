@@ -154,19 +154,17 @@ and   joh.job_id = 'AC_ACCOUNT';
 매니저(manager)의 이름(first_name), 위치(locations)한 도시(city), 나라(countries)의
 이름(countries_name) 그리고 지역구분(regions)의 이름(resion_name)까지 전부 출력해 보세요.
 (11건)*/
---수정할것
-select de department_id,
-       de department_name,
-       em first_name,
-       lo city,
-       co country_name,
-       reg region_name
+select de.department_id,
+       de.department_name,
+       em.first_name,
+       lo.city,
+       co.country_name,
+       reg.region_name
 from departments de, employees em, locations lo, countries co, regions reg
 where de.department_id = em.department_id
 and   de.location_id = lo.location_id
 and   lo.country_id = co.country_id
 and   co.region_id = reg.region_id;
-
 
 /*
 문제9.
