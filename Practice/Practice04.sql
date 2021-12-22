@@ -16,25 +16,20 @@ where salary < (select avg(salary)
 직원번호(employee_id), 이름(first_name), 급여(salary), 평균급여, 최대급여를 급여의 오름차
 순으로 정렬하여 출력하세요
 (51건)*/
-select avg(salary) --1개의 값만 나와서 employee_id랑 그냥은 못쓰고 group by 해줘야함
-from employees;
-
-
+                
 select employee_id,
        first_name,
        salary,
        avg(salary),
        max(salary)
 from employees
-group by employee_id,first_name,salary
-having salary >= (select avg(salary)
-                 from employees)
-and salary <= (select max(salary)
-                 from employees);                 
- --수정하기                     
+where salary between (select avg(salary)
+                      from employees) 
+             and (select max(salary)
+                  from employees)
+group by employee_id, first_name, salary;
 
-                 
-                 
+                   
 /*
 문제3.
 직원중 Steven(first_name) king(last_name)이 소속된 부서(departments)가 있는 곳의 주소
@@ -42,24 +37,20 @@ and salary <= (select max(salary)
 도시아이디(location_id), 거리명(street_address), 우편번호(postal_code), 도시명(city), 주
 (state_province), 나라아이디(country_id) 를 출력하세요
 (1건)*/
---steven king이 소속된 부서 구하기 -> 부서아이디 90  도시아이디 구하기
-select first_name,
-       last_name,
-       department_id
-from employees      
-where first_name = 'Steven'
-and last_name = 'King';
 
-select loacation_id,
-       street_address,
-       postal_code,
-       city,
-       state_province,
-       country_id
-from locations
-where ;
---수정하기
-
+select l.location_id,
+       l.street_address,
+       l.postal_code,
+       l.city,
+       l.state_province,
+       l.country_id
+from locations l
+where l.location_id = (select de.location_id
+                      from employees em, locations lo, departments de      
+                      where first_name = 'Steven'
+                      and last_name = 'King'
+                      and em.department_id = de.department_id
+                      and de.location_id = lo.location_id);
 
 
 /*
@@ -67,6 +58,19 @@ where ;
 job_id 가 'ST_MAN' 인 직원의 급여보다 작은 직원의 사번,이름,급여를 급여의 내림차순으로
 출력하세요 -ANY연산자 사용
 (74건)*/
+                      
+select salary
+from employees
+where job_id = 'ST_MAN';
+
+select employee_id,
+       first_name,
+       salary
+from employees
+where salary < any (select salary 
+                    from employees
+                    where job_id = 'ST_MAN')
+order by salary desc;                      
 
 
 /*
