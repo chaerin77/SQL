@@ -35,16 +35,14 @@ order by employee_id asc;
 문제2-1.
 문제2에서 부서가 없는 Kimberely(사번 178)까지 표시해 보세요
 (107건)*/
---수정할것
-select employee_id,
-       first_name,
-       salary,
-       department_name,
-       job_title
-from employees em left outer join departments de,
-     
-on em.department_id = de.department_id
-
+select em.employee_id,
+       em.first_name,
+       em.salary,
+       de.department_name,
+       jo.job_title
+from employees em, departments de, jobs jo
+where em.department_id = de.department_id(+)
+and em.job_id = jo.job_id;
 
 /*
 문제3.
@@ -172,3 +170,11 @@ and   co.region_id = reg.region_id;
 매니저(manager)의 이름(first_name)을 조회하세요.
 부서가 없는 직원(Kimberely)도 표시합니다.
 (106명)*/
+
+select em.employee_id,
+       em.first_name,
+       de.department_name,
+       ma.first_name
+from employees em, employees ma, departments de
+where em.department_id = de.department_id(+)
+and em.manager_id = ma.employee_id;
