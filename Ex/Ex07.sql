@@ -183,6 +183,61 @@ select employee_id,
 from employees
 where salary > all ( select salary
                      from employees
-                     where department_id =110);                     
+                     where department_id =110);  
+                     
+                   
+/*******************************************************
+ *******************************************************
+ ******************************************************/ 
+ 
+--where 절 서브쿼리
+--각 부서별로 최고 급여를 받는 사원을 출력하세요
+
+--01. 각 부서별 최고 급여 리스트                     
+select department_id,
+       max(salary)
+from employees
+group by department_id; --group by 해주기
+                     
+--02. 직원 리스트에서 부서별 최고 급여를 받는 사람을 구한다
+select first_name,
+       salary,
+       department_id
+from employees
+where salary = 11000
+and department_id = 30;
+
+select first_name,
+       salary,
+       department_id
+from employees
+where(department_id, salary) in (select department_id,
+                                        max(salary)
+                                 from employees
+                                 group by department_id);
+                                 
+                                 
+--테이블 서브쿼리
+--각 부서별로 최고급여를 받는 사원을 출력하세요
+
+--01.각 부서별 최고 급여 리스트 --> join에 이용할 테이블로 사용 예정
+select department_id,
+       max(salary)
+from employees
+group by department_id;
+
+
+select em.first_name,
+       em.salary,
+       em.department_id,
+       ms.department_id,
+       ms.salary
+from employees em, (select department_id,
+       					   max(salary)
+					from employees
+					group by department_id) ms
+where em.department_id = ms.department_id
+and em.salary = ms.salary;
+       
                      
                                   
