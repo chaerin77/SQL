@@ -80,6 +80,14 @@ order by salary desc;
 단 조회결과는 급여의 내림차순으로 정렬되어 나타나야 합니다.
 조건절비교, 테이블조인 2가지 방법으로 작성하세요
 (11건)*/
+select employee_id,
+       first_name,
+       salary,
+       department_id
+from employees
+where (department_id,salary) in (select department_id,max(salary)
+                                 from employees
+                                 group by department_id);
 
 
 /*
@@ -87,6 +95,12 @@ order by salary desc;
 각 업무(job) 별로 연봉(salary)의 총합을 구하고자 합니다.
 연봉 총합이 가장 높은 업무부터 업무명(job_title)과 연봉 총합을 조회하시오
 (19건)*/
+select job_title,
+       sum(salary)
+from jobs, employees
+where jobs.job_id = employees.job_id
+group by job_title
+order by sum(salary) desc;
 
 
 /*
