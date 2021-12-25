@@ -135,3 +135,46 @@ and em.salary > s.average;
 문제8.
 직원 입사일이 11번째에서 15번째의 직원의 사번, 이름, 급여, 입사일을 입사일 순서로 출력
 하세요*/
+--1.입사일 순서로 정렬하기
+select employee_id,
+       first_name,
+       salary,
+       hire_date
+from employees
+order by hire_date asc;
+
+--2. 1을 테이블 o라고 이름붙이고 그 테이블에 일련번호(rownum)붙이기
+select rownum,
+       o.employee_id,
+       o.first_name,
+       o.salary,
+       o.hire_date
+from (select employee_id,
+      first_name,
+      salary,
+      hire_date
+      from employees
+      order by hire_date asc)o;        
+
+--3. 2를 테이블 r이라고 이름 붙이고, r은 일련번호가 매겨진 테이블이니까 그 위에서 일련번호가 11~15인 조건을 넣어주기 
+--+ r에서 rownum은 번호를 매기기위해 쓴거지만 3.에서도 select rownum해버리면 또 번호매기는걸로 알아들을수있으니 r테이블의 rownum에 별명을지어주고 그 별명을 select절에 쓰기
+
+select r.rno,
+       r.employee_id,
+       r.first_name,
+       r.salary,
+       r.hire_date
+from (select rownum rno,
+             o.employee_id,
+             o.first_name,
+             o.salary,
+             o.hire_date
+      from (select employee_id,
+                   first_name,
+                   salary,
+                   hire_date
+            from employees
+            order by hire_date asc)o
+      )r
+where r.rno >=11
+and r.rno <=15;
