@@ -80,6 +80,7 @@ order by salary desc;
 단 조회결과는 급여의 내림차순으로 정렬되어 나타나야 합니다.
 조건절비교, 테이블조인 2가지 방법으로 작성하세요
 (11건)*/
+--조건절비교
 select employee_id,
        first_name,
        salary,
@@ -89,6 +90,16 @@ where (department_id,salary) in (select department_id,max(salary)
                                  from employees
                                  group by department_id);
 
+--테이블 조인
+select em.employee_id,
+       em.first_name,
+       em.salary,
+       s.department_id
+from employees em, (select department_id,max(salary)salary
+                                 from employees
+                                 group by department_id)s
+where em.department_id = s.department_id
+and em.salary = s.salary;                                 
 
 /*
 문제6.
@@ -108,7 +119,17 @@ order by sum(salary) desc;
 자신의 부서 평균 급여보다 연봉(salary)이 많은 직원의 직원번호(employee_id), 이름
 (first_name)과 급여(salary)을 조회하세요
 (38건)*/
-
+--테이블 조인 , 그룹함수 alias사용
+select em.employee_id,
+       em.first_name,
+       em.salary
+       --em.department_id,
+       --s.average
+from employees em, (select avg(salary)as average,emp.department_id
+                    from employees emp
+                    group by emp.department_id)s
+where em.department_id = s.department_id
+and em.salary > s.average;
 
 /*
 문제8.
