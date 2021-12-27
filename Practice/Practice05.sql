@@ -22,6 +22,17 @@ and salary > 3000;
 -입사일은 2001-01-13 토요일 형식으로 출력합니다.
 -전화번호는 515-123-4567 형식으로 출력합니다.
 (11건)*/
+select employee_id,
+       first_name,
+       salary,
+       to_char(hire_date, 'yyyy-mm-dd day'),
+       phone_number,
+       department_id
+from employees
+where (salary,department_id) in (select max(salary),department_id
+                                 from employees
+                                 group by department_id)
+order by salary desc;
 
 /*
 문제3
@@ -122,7 +133,31 @@ where de.department_id = (select em.department_id
 /*
 문제9.
 평균 급여(salary)가 가장 높은 지역은?*/
-
+select re.region_name
+from regions re,countries co,locations lo,departments de,employees em
+where re.region_id = co.region_id
+and co.country_id = lo.country_id(+)
+and lo.location_id = de.location_id(+)
+and de.department_id = em.department_id(+)
+group by re.region_name,re.region_id
+having avg(em.salary)= (select max(s.average) 
+                        from (select avg(em.salary)as average, 
+                                     re.region_name,
+                                     re.region_id
+                              from regions re,countries co,locations lo,departments de,employees em
+                              where re.region_id = co.region_id
+                              and co.country_id = lo.country_id(+)
+                              and lo.location_id = de.location_id(+)
+                              and de.department_id = em.department_id(+)
+                              group by re.region_name,re.region_id)s);
 /*
 문제10.
 평균 급여(salary)가 가장 높은 업무는?*/
+select jo.job_title
+from employees em, jobs jo
+where em.job_id = jo.job_id
+group by jo.job_title
+having avg(salary) = (select max(avg(em.salary)) 
+                      from employees em, jobs jo
+                      where em.job_id = jo.job_id
+                      group by jo.job_id);
