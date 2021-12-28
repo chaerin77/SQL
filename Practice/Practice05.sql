@@ -44,6 +44,17 @@ order by salary desc;
 -출력내용은 매니저아이디, 매니저이름(first_name), 매니저별평균급여, 매니저별최소급여, 매
 니저별최대급여 입니다.
 (9건)*/
+select em.manager_id,
+       ma.first_name,
+       round(avg(em.salary),1),
+       min(em.salary),
+       max(em.salary)
+from employees em, employees ma
+where em.manager_id = ma.employee_id
+and em.hire_date >= '2005/01/01'
+group by em.manager_id, ma.first_name
+having round(avg(em.salary),1) >= 5000
+order by round(avg(em.salary),1) desc;
 
 /*
 문제4.
